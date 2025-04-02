@@ -406,7 +406,7 @@ ninja.data = [{
           title: 'test post',
           description: "this is what included plotly.js code could look like",
           section: "",handler: () => {
-              window.location.href = "/fr-ca/conlangs/2025/plotly/";
+              window.location.href = "/fr-ca/conlangs/2025/test/";
             },},{id: "news-a-simple-inline-announcement",
           title: 'A simple inline announcement.',
           description: "",

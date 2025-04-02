@@ -27,6 +27,13 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/fr-ca/blog/";
           },
+        },{id: "nav-conlang",
+          title: "conlang",
+          description: "a simple whitespace theme for academics",
+          section: "menu de navigation",
+          handler: () => {
+            window.location.href = "/fr-ca/conlangs/index.html";
+          },
         },{id: "post-a-post-with-plotly-js",
         
           title: "a post with plotly.js",

@@ -1,5 +1,5 @@
 ---
-page_id: conlang
+page_id: conlangs
 layout: default
 permalink: /conlangs/
 title: conlang

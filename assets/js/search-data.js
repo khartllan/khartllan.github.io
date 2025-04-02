@@ -395,6 +395,11 @@ ninja.data = [{
           description: "",
           section: "",handler: () => {
               window.location.href = "/books/en-us/the_godfather/";
+            },},{id: "conlangs-test-post",
+          title: 'test post',
+          description: "this is what included plotly.js code could look like",
+          section: "",handler: () => {
+              window.location.href = "/conlangs/2025/plotly/";
             },},{id: "news-a-simple-inline-announcement",
           title: 'A simple inline announcement.',
           description: "",

@@ -145,6 +145,9 @@ collections:
   conlangs:
     output: true
     permalink: /conlangs/:year/:title/
+    pagination:
+      enabled: true
+      title: ":title - pagination.page :num"
 
 # -----------------------------------------------------------------------------
 # Jekyll settings

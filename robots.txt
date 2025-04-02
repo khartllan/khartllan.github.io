@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://khartllan.github.io/sitemap.xml
+Sitemap: https://www.khartllan.com/sitemap.xml

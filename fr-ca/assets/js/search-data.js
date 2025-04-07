@@ -34,7 +34,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/fr-ca/conlangs/index.html";
           },
-        },{id: "post-a-post-with-plotly-js",
+        },{id: "post-multilingual",
+        
+          title: "multilingual",
+        
+        description: "this is what included plotly.js code could look like",
+        section: "articles",
+        handler: () => {
+          
+            window.location.href = "/fr-ca/blog/2025/test/";
+          
+        },
+      },{id: "post-a-post-with-plotly-js",
         
           title: "a post with plotly.js",
         

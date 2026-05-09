@@ -1,6 +1,7 @@
 ---
-title: 카르틀란 세계관 위키
+title: 카르틀란에 오신 것을 환영합니다!
 ---
 
-This is a blank Quartz installation.
-See the [documentation](https://quartz.jzhao.xyz) for how to get started.
+카르틀란은 다섯 지성 종족이 살아가던 행성입니다.
+이곳에 그들의 모든 이야기가 펼쳐집니다.
+

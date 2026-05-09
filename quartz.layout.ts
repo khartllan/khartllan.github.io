@@ -3,6 +3,8 @@ import * as Component from "./quartz/components"
 
 // 커스텀 정렬 함수 — frontmatter의 order 필드 우선
 const explorerSortFn = (a: any, b: any) => {
+  console.log("SORT:", a.displayName, b.displayName,
+    a.file?.frontmatter?.order, b.file?.frontmatter?.order)
   // index.md는 항상 맨 위
   if (a.file?.slug?.endsWith("/index")) return -1
   if (b.file?.slug?.endsWith("/index")) return 1

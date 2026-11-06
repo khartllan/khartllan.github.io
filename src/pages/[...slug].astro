@@ -1,0 +1,11 @@
+---
+import Home from '../components/Home.astro';
+import Article from '../components/Article.astro';
+import { documents, type Document } from '../lib/documents';
+export function getStaticPaths() {
+  return documents.map((doc) => ({ params: { slug: doc.slug || undefined }, props: { doc } }));
+}
+interface Props { doc: Document; }
+const { doc } = Astro.props;
+---
+{doc.slug ? <Article doc={doc} /> : <Home />}

@@ -1,0 +1,36 @@
+---
+import type { Document } from '../lib/documents';
+import { ancestorsOf, childrenOf, orderedDocuments } from '../lib/documents';
+import Base from '../layouts/Base.astro';
+import DocumentTree from './DocumentTree.astro';
+interface Props { doc: Document; }
+const { doc } = Astro.props;
+const { Content } = doc.markdown;
+const headings = doc.markdown.getHeadings().filter((heading) => heading.slug !== 'footnote-label');
+const children = childrenOf(doc.slug);
+const index = orderedDocuments.findIndex((item) => item.slug === doc.slug);
+const previous = orderedDocuments[index - 1];
+const next = orderedDocuments[index + 1];
+const isStub = !doc.markdown.rawContent().split('\n').some((line) => line.trim() && !line.startsWith('#'));
+---
+<Base title={doc.title} description={doc.summary} canonicalPath={doc.href} active="documents">
+  <div class:list={['reading-layout', { 'with-toc': headings.length > 0 }]}>
+    <aside class="desktop-tree"><nav aria-label="문서 목록"><p class="sidebar-label">카르틀란 기록</p><DocumentTree current={doc.slug} /></nav></aside>
+    <main id="main" tabindex="-1" class="article-main">
+      <details class="mobile-tree"><summary>문서 목록</summary><nav aria-label="모바일 문서 목록"><DocumentTree current={doc.slug} /></nav></details>
+      <nav class="breadcrumbs" aria-label="현재 위치"><ol>{ancestorsOf(doc).map((ancestor) => <li><a href={ancestor.href}>{ancestor.slug ? ancestor.title : '카르틀란'}</a><span aria-hidden="true">/</span></li>)}<li aria-current="page">{doc.title}</li></ol></nav>
+      <article>
+        <header class="article-header"><p class="eyebrow" lang="en">Khartllan archive</p><h1>{doc.title}</h1></header>
+        {headings.length > 0 && <details class="mobile-toc"><summary>이 문서의 목차</summary><nav aria-label="본문 목차"><ul>{headings.map((heading) => <li><a href={`#${heading.slug}`}>{heading.text}</a></li>)}</ul></nav></details>}
+        <div class="prose"><Content /></div>
+        {isStub && <p class="draft-note">작성 중인 문서입니다.</p>}
+        {children.length > 0 && <section class="child-documents" aria-labelledby="child-title"><h2 id="child-title">이어서 읽기</h2><ol>{children.map((child) => <li><a href={child.href}><span><strong>{child.title}</strong><span>{child.summary.length > 85 ? `${child.summary.slice(0, 85)}…` : child.summary}</span></span><span aria-hidden="true">→</span></a></li>)}</ol></section>}
+      </article>
+      <nav class="page-pagination" aria-label="문서 순서">
+        <div>{previous && <a href={previous.href}><span>← 이전 기록</span><strong>{previous.slug ? previous.title : '카르틀란 소개'}</strong></a>}</div>
+        <div>{next && <a href={next.href}><span>다음 기록 →</span><strong>{next.title}</strong></a>}</div>
+      </nav>
+    </main>
+    {headings.length > 0 && <aside class="desktop-toc"><nav aria-label="본문 목차"><p class="sidebar-label">이 문서에서</p><ul>{headings.map((heading) => <li><a href={`#${heading.slug}`}>{heading.text}</a></li>)}</ul></nav></aside>}
+  </div>
+</Base>

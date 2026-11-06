@@ -1,0 +1,12 @@
+---
+import { childrenOf } from '../lib/documents';
+interface Props { parent?: string; current?: string; depth?: number; }
+const { parent = '', current = '', depth = 0 } = Astro.props;
+---
+<ul class:list={['document-tree', { 'tree-root': depth === 0 }]}>
+  {depth === 0 && <li><a href="/" aria-current={current === '' ? 'page' : undefined}>카르틀란 소개</a></li>}
+  {childrenOf(parent).map((doc) => <li>
+    <a href={doc.href} aria-current={current === doc.slug ? 'page' : undefined} class:list={{ 'tree-folder': doc.isIndex }}>{doc.title}</a>
+    {doc.isIndex && <Astro.self parent={doc.slug} current={current} depth={depth + 1} />}
+  </li>)}
+</ul>

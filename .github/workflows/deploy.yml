@@ -1,17 +1,17 @@
-name: Deploy Quartz site to GitHub Pages
+name: Deploy Khartllan to GitHub Pages
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: "pages"
+  group: pages-${{ github.event_name == 'pull_request' && github.ref || 'production' }}
   cancel-in-progress: false
 
 jobs:
@@ -19,22 +19,32 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
-      - name: Install Dependencies
+          node-version-file: .node-version
+          cache: npm
+      - name: Install dependencies
         run: npm ci
-      - name: Build Quartz
-        run: npx quartz build
-      - name: Upload artifact
+      - name: Check Astro and TypeScript
+        run: npm run check
+      - name: Build static site and legacy paths
+        run: npm run build
+      - name: Install test browser
+        run: npx playwright install --with-deps chromium
+      - name: Check content, links, search, and mobile layout
+        run: npm test
+      - name: Upload Pages artifact
+        if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
         with:
-          path: public
+          path: dist
 
   deploy:
+    if: github.event_name != 'pull_request'
     needs: build
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

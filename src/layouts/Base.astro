@@ -1,0 +1,45 @@
+---
+import '@fontsource-variable/noto-sans';
+import '@fontsource-variable/noto-sans-kr';
+import '../styles/global.css';
+interface Props { title: string; description?: string; canonicalPath?: string; active?: 'home' | 'documents' | 'search'; }
+const { title, description = '카르틀란은 다섯 지성 종족이 살아가던 행성입니다. 그들의 언어와 이야기를 기록합니다.', canonicalPath = Astro.url.pathname, active } = Astro.props;
+const canonical = new URL(canonicalPath, Astro.site);
+---
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#ffffff" />
+    <title>{title} · Khartllan</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="application/rss+xml" title="Khartllan" href="/index.xml" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="ko_KR" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">본문으로 바로가기</a>
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="Khartllan 홈">
+        <svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M16 2 29 11v14L16 30 3 25V11Z" stroke="currentColor" stroke-width="1.4"/><path d="M16 7v18M8 12l16 9M24 12 8 21" stroke="currentColor" stroke-width="1.4"/><circle cx="16" cy="16.5" r="3" fill="currentColor"/></svg>
+        <span>Khartllan<span class="brand-subtitle">카르틀란</span></span>
+      </a>
+      <nav class="header-nav" aria-label="주 메뉴">
+        <a href="/" aria-current={active === 'home' ? 'page' : undefined}>세계 소개</a>
+        <a href="/인공어/" aria-current={active === 'documents' ? 'true' : undefined}>언어와 기록</a>
+        <a class="search-link" href="/search/" aria-current={active === 'search' ? 'page' : undefined}><svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="1.6"/><path d="m16 16 5 5" stroke="currentColor" stroke-width="1.6"/></svg>검색</a>
+      </nav>
+    </header>
+    <slot />
+    <footer class="site-footer">
+      <div><a href="/">Khartllan</a><span>개인 세계관 기록</span></div>
+      <nav aria-label="관련 링크"><a href="https://www.joonhyunsong.kr/">만든 사람</a><a href="https://github.com/khartllan/khartllan.github.io">GitHub</a><a href="/index.xml">RSS</a></nav>
+    </footer>
+  </body>
+</html>

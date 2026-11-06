@@ -1,0 +1,44 @@
+---
+import Base from '../layouts/Base.astro';
+import { orderedDocuments } from '../lib/documents';
+const index = orderedDocuments.map(({ title, href, text }) => ({ href, text: `${title} ${text}` }));
+---
+<Base title="기록 검색" canonicalPath="/search/" active="search">
+  <main id="main" tabindex="-1" class="search-main">
+    <header class="search-heading"><p class="eyebrow" lang="en">Search the archive</p><h1>기록 검색</h1><p>카르틀란의 언어와 이야기에서 찾아보세요.</p></header>
+    <form class="search-form" action="/search/" role="search"><label for="query">제목이나 본문으로 검색</label><div class="search-field"><input type="search" id="query" name="q" placeholder="예: 라르다라쓰, 모음, 쓰쿠우후" autocomplete="off" /><button type="submit">검색</button></div></form>
+    <p id="result-count" class="result-count" role="status" aria-live="polite">기록 {orderedDocuments.length}개</p>
+    <p id="no-results" hidden>일치하는 기록이 없습니다. 다른 검색어를 입력해 보세요.</p>
+    <ol class="search-results">{orderedDocuments.map((doc) => <li data-href={doc.href}><a href={doc.href}><h2>{doc.title}</h2><span class="search-path">{doc.href === '/' ? '카르틀란' : doc.href.replaceAll('/', ' / ').trim()}</span><p>{doc.summary}</p></a></li>)}</ol>
+    <noscript><p class="search-fallback">문서 목록에서 기록을 골라 읽을 수 있습니다. 검색어로 좁혀 보려면 JavaScript가 필요합니다.</p></noscript>
+    <script id="search-index" type="application/json" set:html={JSON.stringify(index).replace(/</g, '\\u003c')} />
+  </main>
+</Base>
+<script>
+  const field = document.querySelector<HTMLInputElement>('#query')!;
+  const form = document.querySelector<HTMLFormElement>('.search-form')!;
+  const count = document.querySelector('#result-count')!;
+  const empty = document.querySelector<HTMLElement>('#no-results')!;
+  const rows = [...document.querySelectorAll<HTMLElement>('.search-results li')];
+  const index: { href: string; text: string }[] = JSON.parse(document.querySelector('#search-index')!.textContent!);
+  const normalize = (text: string) => text.normalize('NFKC').toLocaleLowerCase('ko').replace(/\s+/g, ' ');
+  const texts = new Map(index.map(({ href, text }) => [href, normalize(text)]));
+  function search() {
+    const query = field.value.trim();
+    const terms = normalize(query).split(' ').filter(Boolean);
+    let matches = 0;
+    for (const row of rows) {
+      row.hidden = !terms.every((term) => (texts.get(row.dataset.href!) ?? '').includes(term));
+      if (!row.hidden) matches++;
+    }
+    count.textContent = terms.length ? `검색 결과 ${matches}개` : `기록 ${matches}개`;
+    empty.hidden = matches !== 0;
+    const url = new URL(location.href);
+    if (query) url.searchParams.set('q', query); else url.searchParams.delete('q');
+    history.replaceState(null, '', url);
+  }
+  field.value = new URL(location.href).searchParams.get('q') ?? '';
+  field.addEventListener('input', search);
+  form.addEventListener('submit', (event) => { event.preventDefault(); search(); });
+  search();
+</script>
